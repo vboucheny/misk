@@ -143,4 +143,19 @@ class RetryingTransacterTest {
 
     assertThat(retrievedTitle).isEqualTo(title)
   }
+
+  @Test fun nestedRetries() {
+    var tries = 0
+    val oneRetryTransacter = transacter.maxAttempts(2)
+    assertThrows<OptimisticLockException> {
+      oneRetryTransacter.transaction {
+        oneRetryTransacter.transaction {
+          tries++
+          throw OptimisticLockException("fake transient exception")
+        }
+      }
+    }
+
+    assertThat(tries).isEqualTo(2)
+  }
 }

@@ -25,8 +25,8 @@ class RetryingTransacter(
   private val delegate: Transacter,
   private val options: TransacterOptions = TransacterOptions()
 ) : Transacter {
-  fun retries(retires: Int): RetryingTransacter = RetryingTransacter(delegate, options.copy(
-    maxAttempts = retires))
+  fun maxAttempts(maxAttempts: Int): RetryingTransacter = RetryingTransacter(delegate, options.copy(
+    maxAttempts = maxAttempts))
 
   override fun transaction(noEnclosing: Boolean,
     body: TransactionWithoutReturn.() -> Unit) = retryWithWork {
